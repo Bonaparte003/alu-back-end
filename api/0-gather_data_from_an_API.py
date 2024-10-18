@@ -6,7 +6,7 @@ import requests
 import sys
 
 
-def main():
+if __name__ == "__main__":
     """Fetches data from an API"""
     inid = int(sys.argv[1])
     user_url = f'https://jsonplaceholder.typicode.com/users?id={inid}'
@@ -29,7 +29,3 @@ def main():
           f'({counter_done}/{counter_total}):')
     for task_title in list_done:
         print(f'\t {task_title}')
-
-
-if __name__ == "__main__":
-    main()
