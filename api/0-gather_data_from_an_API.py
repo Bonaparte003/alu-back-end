@@ -14,7 +14,7 @@ if __name__ == '__main__':
     todo = requests.get("https://jsonplaceholder.typicode.com/todos?userId={}".
                         format(userId), verify=False).json()
     completed_tasks = []
-    user_name = user.get('name').strip()
+    user_name = user["name"]
     for task in todo:
         if task.get('completed') is True:
             completed_tasks.append(task.get('title'))
