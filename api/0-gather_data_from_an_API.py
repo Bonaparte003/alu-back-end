@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 """function that fetches api"""
 
-import sys
+from sys import argv
 import requests
 
 """function that fetches api"""
 
 if __name__ == '__main__':
     """can't be imported"""
-    employee_id = sys.argv[1]
+    employee_id = argv[1]
     user_url = "https://jsonplaceholder.typicode.com/users/{}" \
         .format(employee_id)
     todosurl = "https://jsonplaceholder.typicode.com/users/{}/todos/" \
