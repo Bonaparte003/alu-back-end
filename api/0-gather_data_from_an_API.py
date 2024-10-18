@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """function that fetches api"""
 
-import requests
 import sys
+import requests
 
 """function that fetches api"""
 
