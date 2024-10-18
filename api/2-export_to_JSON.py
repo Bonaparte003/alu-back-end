@@ -1,45 +1,28 @@
 #!/usr/bin/python3
-"""Script to gather data from an API"""
-
+"""
+fetches data from an API
+and exports it to a JSON file
+"""
 
 import json
 import requests
-import sys
+from sys import argv
 
-
-def main():
-    """main function"""
-    inid = int(sys.argv[1])
-    user_url = f'https://jsonplaceholder.typicode.com/users?id={inid}'
-    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={inid}'
-    user_data = requests.get(user_url).json()
-    todo_data = requests.get(todo_url).json()
-    counter_done = 0
-    counter_total = 0
-    list_done = []
-    list_tasks = []
-    user_names = f"{user_data[0]['name']} {user_data[0]['username']}"
-    for i in todo_data:
-        if i['completed'] is True:
-            counter_done += 1
-            list_done.append(i['title'])
-    for a in todo_data:
-        if a['completed'] is True or a['completed'] is False:
-            counter_total += 1
-            list_tasks.append(a['title'])
-    print(f'Employee {user_names} is done with tasks0 '
-          f'({counter_done}/{counter_total}):')
-    for j in list_done:
-        print('\t {}'.format(j))
-    json_format = ({inid: [
-        {
-            "task": i['title'],
-            "completed": i['completed'],
-            "username": user_data[0]['username']} for i in todo_data
-         ]})
-    with open('{}.json'.format(inid), 'w') as f:
-        json.dump(json_format, f, indent=4)
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    userId = argv[1]
+    user = requests.get("https://jsonplaceholder.typicode.com/users/{}".
+                        format(userId), verify=False).json()
+    todo = requests.get("https://jsonplaceholder.typicode.com/todos?userId={}".
+                        format(userId), verify=False).json()
+    username = user.get('username')
+    tasks = []
+    for task in todo:
+        task_dict = {}
+        task_dict["task"] = task.get('title')
+        task_dict["completed"] = task.get('completed')
+        task_dict["username"] = username
+        tasks.append(task_dict)
+    jsonobj = {}
+    jsonobj[userId] = tasks
+    with open("{}.json".format(userId), 'w') as jsonfile:
+        json.dump(jsonobj, jsonfile)

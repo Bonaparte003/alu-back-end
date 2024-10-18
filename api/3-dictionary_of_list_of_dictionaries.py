@@ -1,38 +1,29 @@
 #!/usr/bin/python3
-"""Script to gather data from an API"""
-
+"""
+fetches data from an API
+and exports it to a JSON file
+"""
 
 import json
 import requests
 
-
-def main():
-    """main function"""
-    users_url = 'https://jsonplaceholder.typicode.com/users'
-    todos_url = 'https://jsonplaceholder.typicode.com/todos'
-    users_data = requests.get(users_url).json()
-    todos_data = requests.get(todos_url).json()
-
-    all_tasks = {}
-
-    for user in users_data:
-        user_id = user['id']
-        username = user['username']
-        user_tasks = []
-
-        for task in todos_data:
-            if task['userId'] == user_id:
-                task_info = {
-                    "username": username,
-                    "task": task['title'],
-                    "completed": task['completed']
-                }
-                user_tasks.append(task_info)
-        all_tasks[user_id] = user_tasks
-
-    with open('todo_all_employees.json', 'w') as f:
-        json.dump(all_tasks, f, indent=4)
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    users = requests.get("https://jsonplaceholder.typicode.com/users",
+                         verify=False).json()
+    userdict = {}
+    usernamedict = {}
+    for user in users:
+        uid = user.get("id")
+        userdict[uid] = []
+        usernamedict[uid] = user.get("username")
+    todo = requests.get("https://jsonplaceholder.typicode.com/todos",
+                        verify=False).json()
+    for task in todo:
+        taskdict = {}
+        uid = task.get("userId")
+        taskdict["task"] = task.get('title')
+        taskdict["completed"] = task.get('completed')
+        taskdict["username"] = usernamedict.get(uid)
+        userdict.get(uid).append(taskdict)
+    with open("todo_all_employees.json", 'w') as jsonfile:
+        json.dump(userdict, jsonfile)
