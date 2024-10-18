@@ -1,21 +1,18 @@
 #!/usr/bin/python3
-"""function that fetches api"""
+"""
+Fetches data from an API
+and returns information about the employee's todo list progress
+"""
 
 import requests
 from sys import argv
 
-"""function that fetches api"""
-
 if __name__ == '__main__':
-    """can't be imported"""
-    employee_id = argv[1]
-    user_url = "https://jsonplaceholder.typicode.com/users/{}" \
-        .format(employee_id)
-    todosurl = "https://jsonplaceholder.typicode.com/users/{}/todos/" \
-        .format(employee_id)
-
-    user_info = requests.get(user_url).json()
-    todos_info = requests.get(todosurl).json()
+    userId = argv[1]
+    user = f"https://jsonplaceholder.typicode.com/users/{userId}"
+    todo = f"https://jsonplaceholder.typicode.com/todos?userId={userId}"
+    user_info = requests.get(user).json()
+    todos_info = requests.get(todo).json()
 
     employee_name = user_info["name"]
     task_completed = list(filter(lambda obj:
