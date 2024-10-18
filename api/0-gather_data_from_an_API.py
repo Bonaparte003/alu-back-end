@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """function that fetches api"""
 
-from sys import argv
 import requests
+from sys import argv
 
 """function that fetches api"""
 
