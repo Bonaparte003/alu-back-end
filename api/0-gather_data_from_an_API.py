@@ -1,36 +1,35 @@
 #!/usr/bin/python3
-"""Fetch data from an API"""
+"""Script that fetches data from an API"""
+
 
 import requests
 import sys
 
 
 def main():
-    """the main function"""
-    uid = int(sys.argv[1])
-    todos_url = 'https://jsonplaceholder.typicode.com/todos'
-    users_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(uid)
+    """Fetches data from an API"""
+    inid = int(sys.argv[1])
+    user_url = f'https://jsonplaceholder.typicode.com/users?id={inid}'
+    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={inid}'
+    user_data = requests.get(user_url).json()
+    todo_data = requests.get(todo_url).json()
 
-    response = requests.get(todos_url)
+    user_name = user_data[0]['name']
+    user_username = user_data[0]['username']
+    counter_done = 0
+    counter_total = len(todo_data)
+    list_done = []
 
-    total_questions = 0
-    completed = []
-    for todo in response.json():
+    for task in todo_data:
+        if task['completed']:
+            counter_done += 1
+            list_done.append(task['title'])
 
-        if todo['userId'] == uid:
-            total_questions += 1
-
-            if todo['completed']:
-                completed.append(todo['title'])
-
-    user_name = requests.get(users_url).json()['name']
-
-    printer = ("Employee {} is done with tasks({}/{}):".format(user_name,
-               len(completed), total_questions))
-    print(printer)
-    for t in completed:
-        print("\t {}".format(t))
+    print(f'Employee {user_name} {user_username} is done with tasks '
+          f'({counter_done}/{counter_total}):')
+    for task_title in list_done:
+        print(f'\t {task_title}')
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
